@@ -1,5 +1,6 @@
 # Django-Scraping
-It's a website scraping news with images and links from other site.
+It's a website scraping news with images and links from the other site.
+User can scrape once a 24 hours.
 The project is in progress, I'm going to add some financial data and generate charts.
 
 # Technologies
