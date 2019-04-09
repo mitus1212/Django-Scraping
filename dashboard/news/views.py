@@ -1,0 +1,86 @@
+from time import sleep
+from bs4 import BeautifulSoup
+import math
+from datetime import timedelta, timezone, datetime
+import os
+from .models import Headline, UserProfile
+from django.shortcuts import render, redirect
+import shutil
+import requests
+# Create your views here.
+requests.packages.urllib3.disable_warnings()
+
+def news_list(request):
+    user_prof = UserProfile.objects.filter(user=request.user).first()
+    now = datetime.now(timezone.utc)
+    time_difference = now - user_prof.last_scrape
+    time_difference_in_hours = time_difference / timedelta(minutes=60)
+    next_scrape = 24 - time_difference_in_hours
+
+    if time_difference_in_hours <= 24:
+        hide_me = True
+    else:
+        hide_me = False
+
+
+    headlines = Headline.objects.all()
+    context = {
+        'object_list': headlines,
+        'hide_me': hide_me,
+        'next_scrape': math.ceil(next_scrape)
+    }
+    return render(request, "news/home.html", context)
+
+def scrape(request):
+
+    user_prof = UserProfile.objects.filter(user=request.user).first()
+    if user_prof is not None:
+        user_prof.last_scrape = datetime.now(timezone.utc)
+        user_prof.save()
+
+    session = requests.Session()
+    session.headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36"}
+    url = 'https://www.onet.pl/'
+
+    content = session.get(url, verify=False).content
+
+    soup = BeautifulSoup(content, "html.parser")
+
+    #posts = soup.find_all('a',{'class':'itemBox itemBox_3_1 s1_155'})
+
+    posts = soup.find_all('div', {'class': 'sectionLine'})
+        
+    for post in posts:
+        title = post.find('span', {'class': 'title'}).get_text()
+        link = post.find("a")['href']
+        image_source = post.find('img')['src']
+        image_source_solved = "http:{}".format(image_source)
+
+            # stackoverflow solution
+
+        media_root = '/Users/mat/Desktop/jspython/just django/dashboard/media_root'
+        if not image_source_solved.startswith(("data:image", "javascript")):
+            #exists = os.path.isfile(media_root+image_source_solved)
+            exists = 1
+            if exists == 2:
+                pass
+            else:
+                local_filename = image_source_solved.split('/')[-1].split("?")[0]+".jpg"
+                r = session.get(image_source_solved, stream=True, verify=False)
+                with open(local_filename, 'wb') as f:
+                    for chunk in r.iter_content(chunk_size=1024):
+                        f.write(chunk)
+
+                current_image_absolute_path = os.path.abspath(local_filename)
+                shutil.move(current_image_absolute_path, media_root)
+
+                # end of stackoverflow solution
+
+            new_headline = Headline()
+            new_headline.title = title
+            new_headline.url = link
+            new_headline.image = local_filename
+            new_headline.save()
+            sleep(1)
+    return redirect('/home/')
