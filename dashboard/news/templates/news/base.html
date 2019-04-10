@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <title>Base</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- Alternative to Bootstrap 3 Glyphicons -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+   
+    {#<a class="navbar-brand bigbrand" href="{% url 'notepad:list' %}">Home</a>#}
+
+    {# Fonts#}
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Russo+One" rel="stylesheet">
+  </head>
+
+  <body class='loader'>
+
+    <nav class="navbar navbar-expand-lg bg-light techfont">
+      <div class="container">
+        <div class="navbar-nav align-items-center">
+          <a class="navbar-brand bigbrand" href="{% url 'news:home' %}">Home</a>
+          <a class="nav-item nav-link" href="https://www.github.com">Github</a>
+          <a class="nav-item nav-link" href="https://www.linkedin.com">LinkedIn</a>
+          <a class="nav-item nav-link" href={% url 'notepad:list' %}>Notepad List</a>
+          <a class="nav-item nav-link" href={% url 'notepad:create' %}>Notepad Create</a>
+
+
+        </div>
+    
+      </div>
+    </nav>
+
+
+    {# The actual blog posts#}
+          <div class="content container">
+              <div class="row">
+                  <div class="col-md-8">
+                    <div class="blog_posts">
+                      {% block content %}
+                      {% endblock %}
+
+                    </div>
+                  </div>
+              </div>
+          </div>
+
+  </body>
+</html>

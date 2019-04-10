@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
+
     
-    <title>Page Title</title>
-   
-</head>
-<body>
-    <h1>Your Notes</h1>
+{% extends 'news/base.html' %}
+
+{% block content %}
+  <h1>Your Notes</h1>
     <ul>
         {% for object in object_list %}
         <li>
@@ -15,7 +12,4 @@
         {% endfor %}
     </ul>
     
-
-    
-</body>
-</html>
+{% endblock %}

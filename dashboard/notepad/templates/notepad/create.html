@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
- 
-    <title>Page Title</title>
+{% extends 'news/base.html' %}
 
-</head>
-<body>
+{% block content %}
+ 
+
     <form method="POST" action="." enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p}}
@@ -13,5 +10,4 @@
 
     </form>
     
-</body>
-</html>
+{% endblock %}

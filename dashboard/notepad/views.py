@@ -11,12 +11,12 @@ def create_view(request):
     if form.is_valid():
         form.instance.user = request.user
         form.save()
-        return redirect('/')
+        return redirect('/notes/list/')
 
     context = {
         'form': form
     }
-
+    
     return render(request, "notepad/create.html", context)
 
 def list_view(request):

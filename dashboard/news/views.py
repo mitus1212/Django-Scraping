@@ -7,6 +7,7 @@ from .models import Headline, UserProfile
 from django.shortcuts import render, redirect
 import shutil
 import requests
+
 # Create your views here.
 requests.packages.urllib3.disable_warnings()
 
@@ -30,6 +31,13 @@ def news_list(request):
         'next_scrape': math.ceil(next_scrape)
     }
     return render(request, "news/home.html", context)
+
+def delete_article(request, id):
+    item_to_delete = Headline.objects.filter(pk=id)
+    if item_to_delete.exists():
+        if request.user == item_to_delete[0].user:
+            item_to_delete[0].delete()
+    return redirect('/home/')
 
 def scrape(request):
 
