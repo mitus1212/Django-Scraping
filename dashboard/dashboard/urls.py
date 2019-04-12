@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from news.views import scrape
+from news.views import scrape, scrape_weather
 from finance.views import company_article_list
 from django.conf import settings
 from django.conf.urls.static import static
@@ -25,6 +25,7 @@ urlpatterns = [
     path('notes/', include('notepad.urls', namespace='notes')),
     path('admin/', admin.site.urls),
     path('scrape/', scrape, name='scrape'),
+    path('weather/', scrape_weather, name='weather'),
     path('companies/', company_article_list, name='companies'),
     path('', include('news.urls')),
     path('', include('notepad.urls')),
