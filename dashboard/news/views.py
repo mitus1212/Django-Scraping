@@ -92,3 +92,26 @@ def scrape(request):
             new_headline.save()
             sleep(1)
     return redirect('/home/')
+
+def scrape_weather(request):
+
+    
+    api_adress = "http://api.openweathermap.org/data/2.5/weather?q="
+    api_key = "&appid=3a99cf24b53d85f4afad6cafe99d3a34"
+    #city = input("City Name: ")
+    city = "warsaw"
+    url = api_adress + city + api_key
+
+    json_data = requests.get(url).json()
+    weather = json_data['weather'][0]['main']
+    degree_kelvin = int(json_data['main']['temp'])
+    degree = degree_kelvin-273
+    pressure = json_data['main']['pressure']
+    
+    new_weather = Weather()
+    new_weather.degree = degree
+    new_weather.pressure = pressure
+
+    new_weather.weather = weather
+    new_weather.save()
+    return redirect('/home/')
