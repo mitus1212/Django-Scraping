@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import math
 from datetime import timedelta, timezone, datetime
 import os
-from .models import Headline, UserProfile
+from .models import Headline, UserProfile, Weather
 from django.shortcuts import render, redirect
 import shutil
 import requests
@@ -23,13 +23,16 @@ def news_list(request):
     else:
         hide_me = False
 
+    weathers_info = Weather.objects.all()
 
     headlines = Headline.objects.all()
     context = {
         'object_list': headlines,
         'hide_me': hide_me,
-        'next_scrape': math.ceil(next_scrape)
-    }
+        'next_scrape': math.ceil(next_scrape),
+        'weather_in': weathers_info,
+
+    }  
     return render(request, "news/home.html", context)
 
 def delete_article(request, id):
@@ -91,7 +94,12 @@ def scrape(request):
             new_headline.image = local_filename
             new_headline.save()
             sleep(1)
+
+
+
+
     return redirect('/home/')
+
 
 def scrape_weather(request):
 

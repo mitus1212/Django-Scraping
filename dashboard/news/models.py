@@ -17,3 +17,8 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return "{}-{}".format(self.user,self.last_scrape)
+
+class Weather(models.Model):
+    weather = models.TextField()
+    degree = models.CharField(max_length=200)
+    pressure = models.IntegerField()
