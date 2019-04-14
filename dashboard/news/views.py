@@ -80,7 +80,7 @@ def scrape(request):
                 local_filename = image_source_solved.split('/')[-1].split("?")[0]+".jpg"
                 r = session.get(image_source_solved, stream=True, verify=False)
                 with open(local_filename, 'wb') as f:
-                    for chunk in r.iter_content(chunk_size=1024):
+                    for chunk in r.iter_content(chunk_size=2048):
                         f.write(chunk)
 
                 current_image_absolute_path = os.path.abspath(local_filename)

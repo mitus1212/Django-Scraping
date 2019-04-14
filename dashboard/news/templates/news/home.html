@@ -18,7 +18,8 @@
             <button type="submit" clas="btn btn-primary">Get my weather</button>
         </form>
     </div> 
-    
+        <div class="container">
+
                     <h3>Weather</h3>
                 {% for weath in weather_in %}
                 <div class="card text-center" style="width: 100%;">
@@ -29,9 +30,10 @@
                     <h5 class="card-title"><a href="">{{ weath.degree }}</a></h5>
                     </div>
                 {% endfor %}
+                </div>
     <div class="container">
     
-                <div class="col-sm-3 text-center">
+                <div class="col-sm-6 text-center">
                     <h3>News</h3>
                 {% for object in object_list %}
                 <div class="card text-center" style="width: 100%;">
@@ -40,8 +42,8 @@
                     <h5 class="card-title"><a href="{{ object.url }}">{{ object.title }}</a></h5>
                     </div>
                 </div>
+                </div>
                 {% endfor %}
-                <div class="row">
     
 {% endblock %}
 
