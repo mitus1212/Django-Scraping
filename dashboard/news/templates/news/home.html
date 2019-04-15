@@ -3,6 +3,7 @@
 {% block content %}
 
     <div class="jumbotron">
+
         <h1>Welcome to your dashboard</h1>
         {% if hide_me == True %}
         <p>You can scrape in {{ next_scrape }} hours.</p>
@@ -13,10 +14,12 @@
             <button type="submit" clas="btn btn-primary">Get my morning news</button>
         </form>
         {% endif %}
+
          <form method="POST "action="{% url 'weather' %}">
             {% csrf_token %}
             <button type="submit" clas="btn btn-primary">Get my weather</button>
         </form>
+
     </div> 
         <div class="container">
 
@@ -26,11 +29,13 @@
                     <div class="card-body">
                     <h5 class="card-title"><a href="">Weather: {{ weath.weather }}</a></h5>
                     <h5 class="card-title"><a href="">HPa: {{ weath.pressure }}</a></h5>
-
                     <h5 class="card-title"><a href="">{{ weath.degree }}</a></h5>
+                    <a class="btn btn-primary" href="{% url 'news:remove' pk=weath.pk %}"><span class="fa fa-remove"></span></a>
+
                     </div>
                 {% endfor %}
                 </div>
+                
     <div class="container">
     
                 <div class="col-sm-6 text-center">
