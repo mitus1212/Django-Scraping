@@ -123,8 +123,16 @@ def scrape_weather(request):
     new_weather.weather = weather
     new_weather.save()
     return redirect('/home/')
-    
+
 def weather_remove(request, pk):
     weather_removed = get_object_or_404(Weather, pk=pk)
     weather_removed.delete()
     return redirect('/home/')
+
+def article_remove(request, pk):
+    article = get_object_or_404(Headline, pk=pk)
+    article.delete()
+    return redirect('/home/')
+
+
+
