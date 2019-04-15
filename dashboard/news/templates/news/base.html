@@ -19,24 +19,36 @@
   </head>
 
   <body class='loader'>
-
-    <nav class="navbar navbar-expand-lg bg-light techfont">
-      <div class="container">
-        <div class="navbar-nav align-items-center">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
           <a class="navbar-brand bigbrand" href="{% url 'news:home' %}">Home</a>
-          <a class="nav-item nav-link" href="https://www.github.com">Github</a>
-          <a class="nav-item nav-link" href="https://www.linkedin.com">LinkedIn</a>
-          <a class="nav-item nav-link" href={% url 'notepad:list' %}>Notepad List</a>
-          <a class="nav-item nav-link" href={% url 'notepad:create' %}>Notepad Create</a>
-
-
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://www.github.com">Github</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://www.linkedin.com">LinkedIn</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Notepad
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href={% url 'notepad:list' %}>List</a>
+          <a class="dropdown-item" href={% url 'notepad:create' %}>Create</a>
         </div>
-    
-      </div>
-    </nav>
+      </li>
+    </ul>
+  </div>
+</nav>
 
 
-    {# The actual blog posts#}
           <div class="content container">
               <div class="row">
                   <div class="col-md-8">
