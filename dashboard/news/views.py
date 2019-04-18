@@ -4,9 +4,14 @@ import math
 from datetime import timedelta, timezone, datetime
 import os
 from .models import Headline, UserProfile, Weather
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
+
 import shutil
 import requests
+
+from django.views.generic import (DeleteView)
+
+from django.urls import reverse_lazy
 
 # Create your views here.
 requests.packages.urllib3.disable_warnings()
@@ -31,8 +36,9 @@ def news_list(request):
         'hide_me': hide_me,
         'next_scrape': math.ceil(next_scrape),
         'weather_in': weathers_info,
-
     }  
+
+    
     return render(request, "news/home.html", context)
 
 def delete_article(request, id):
@@ -41,9 +47,12 @@ def delete_article(request, id):
         if request.user == item_to_delete[0].user:
             item_to_delete[0].delete()
     return redirect('/home/')
+    
+
 
 def scrape(request):
-
+    old_articles = Weather.objects.all()
+    old_articles.delete()
     user_prof = UserProfile.objects.filter(user=request.user).first()
     if user_prof is not None:
         user_prof.last_scrape = datetime.now(timezone.utc)
@@ -80,7 +89,7 @@ def scrape(request):
                 local_filename = image_source_solved.split('/')[-1].split("?")[0]+".jpg"
                 r = session.get(image_source_solved, stream=True, verify=False)
                 with open(local_filename, 'wb') as f:
-                    for chunk in r.iter_content(chunk_size=2048):
+                    for chunk in r.iter_content(chunk_size=1024):
                         f.write(chunk)
 
                 current_image_absolute_path = os.path.abspath(local_filename)
@@ -102,37 +111,42 @@ def scrape(request):
 
 
 def scrape_weather(request):
+    if request.method == 'POST':
 
-    
-    api_adress = "http://api.openweathermap.org/data/2.5/weather?q="
-    api_key = "&appid=3a99cf24b53d85f4afad6cafe99d3a34"
-    #city = input("City Name: ")
-    city = "warsaw"
-    url = api_adress + city + api_key
+        old_weather = Weather.objects.all()
+        old_weather.delete()
+        api_adress = "http://api.openweathermap.org/data/2.5/weather?q="
+        api_key = "&appid=3a99cf24b53d85f4afad6cafe99d3a34"
+        city = request.POST.get("city")
+        
+        url = api_adress + city + api_key
 
-    json_data = requests.get(url).json()
-    weather = json_data['weather'][0]['main']
-    degree_kelvin = int(json_data['main']['temp'])
-    degree = degree_kelvin-273
-    pressure = json_data['main']['pressure']
-    
-    new_weather = Weather()
-    new_weather.degree = degree
-    new_weather.pressure = pressure
+        json_data = requests.get(url).json()
+        new_weather = json_data['weather'][0]['main']
+        degree_kelvin = int(json_data['main']['temp'])
+        degree = degree_kelvin-273
+        pressure = json_data['main']['pressure']      
+        
+        new_weather = Weather()
+        new_weather.degree = degree
+        new_weather.pressure = pressure
+            
+        new_weather.weather = new_weather
+        new_weather.save()
+        
+    return render(request, "news/home.html")
 
-    new_weather.weather = weather
-    new_weather.save()
-    return redirect('/home/')
+        
 
 def weather_remove(request, pk):
-    weather_removed = get_object_or_404(Weather, pk=pk)
-    weather_removed.delete()
+    weather = get_object_or_404(Weather, pk=pk)
+    weather.delete()
     return redirect('/home/')
+
 
 def article_remove(request, pk):
     article = get_object_or_404(Headline, pk=pk)
     article.delete()
     return redirect('/home/')
-
 
 

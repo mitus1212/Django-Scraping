@@ -1,0 +1,15 @@
+{% extends 'news/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1 class='title loader'>{{ note.title }}</h1>
+		    <div class="container">
+        		<h3 class='posttitle loader'>{{ note.image }}</h1>
+        		<h3 class='posttitle loader'>{{ note.timestamp }}</h1>
+				<a href="{{ note.url }}">{{ note.url }}</a>
+				<h3 class='posttitle loader'>{{ note.url }}</h1>
+			</div>
+    </div>
+
+
+{% endblock %}

@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .forms import NoteModelForm
 from .models import Note
 
+from django.views.generic import DetailView
 # Create your views here.
 
 def create_view(request):
@@ -33,3 +34,19 @@ def delete_view(request, id):
             item_to_delete[0].delete()
     return redirect('/notes/list')
 
+class NoteDetailView(DetailView):
+    model = Note
+
+
+
+'''
+def note_detail(request, pk):
+    note = get_object_or_404(Note, pk=pk)
+    note_pk = note.title.pk
+    return redirect('note_detail', pk=note_pk)
+
+    comment = get_object_or_404(Comment, pk=pk)
+    post_pk = comment.post.pk
+    comment.delete()
+    return redirect('post_detail', pk=post_pk)
+'''

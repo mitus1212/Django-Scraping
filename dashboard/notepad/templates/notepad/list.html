@@ -7,7 +7,9 @@
     <ul>
         {% for object in object_list %}
         <li>
-            {{ object }} <small><a href="{{ object.get_delete_url }}">Delete</a></small>
+            {{ object }} <small><a class="btn btn-primary" href="{{ object.get_delete_url }}"><span style="font-size:12px" class="fa fa-remove"></span></a></small>
+            <a class="btn btn-primary" href="{% url 'notepad:note_detail' pk=object.pk %}">{{ object }}</a>
+
         </li>
         {% endfor %}
     </ul>

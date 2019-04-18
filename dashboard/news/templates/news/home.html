@@ -4,8 +4,9 @@
 
     <div class="jumbotron">
         <h1>Welcome to your dashboard</h1>
+
         {% if hide_me == True %}
-        <p>You can scrape news in {{ next_scrape }} hours.</p>
+            <p>You can scrape news in {{ next_scrape }} hours.</p>
         {% else %}
 
         <form method="POST "action="{% url 'scrape' %}">
@@ -16,49 +17,46 @@
        
     </div> 
         <div class="jumbotron">
+            <h3>Weather</h3>
 
-                    <h3>Weather</h3>
-                           <form method="POST "action="{% url 'weather' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-info">Get my weather</button>
-        </form>
-                    {% if hide_weather == True %}
-        {% else %}
+            <form method="POST" action="{% url 'weather' %}">
+                {% csrf_token %}
+                <input type="text" name="city" id="city"><br> 
+                <p></p>
+                <button type="submit" class="btn btn-info">Get my weather</button>
+            </form>
 
+            {% if hide_weather == True %}
+
+            {% else %}
                 {% for weath in weather_in %}
                 <div class="card text-center" style="width: 100%;">
                     <div class="card-body">
-                    <h5 class="card-title"><a href="">Weather: {{ weath.weather }}</a></h5>
-                    <h5 class="card-title">HPa: {{ weath.pressure }}</h5>
+                        <h5 class="card-title"><a href="">Weather: {{ weath.weather }}</a></h5>
+                        <h5 class="card-title">HPa: {{ weath.pressure }}</h5>
                     
-                    <h5 class="card-title">{{ weath.degree }}&#176;C</h5>
-                    <a class="btn btn-primary" href="{% url 'news:weather_remove' pk=weath.pk %}"><span class="fa fa-remove"></span></a>
+                        <h5 class="card-title">{{ weath.degree }}&#176;C</h5>
+                        <a class="btn btn-primary" href="{% url 'news:weather_remove' pk=weath.pk %}"><span class="fa fa-remove"></span></a>
 
                     </div>
-                    
                 {% endfor %}
                 {% endif %}
 
                 </div>
     <div class="container">
     
-                <div class="col-sm-8 text-center">
-                    <h3>News</h3>
-                {% for article in object_list %}
+        <div class="col-sm-8 text-center">
+            <h3>News</h3>
+            {% for article in object_list %}
                 <div class="card text-center" style="width: 100%;">
-                    <div class="card-body">
-                    <img class="card-img-top" src="{{ article.image.url }}">
-                    <h5 class="card-title"><a href="{{ article.url }}">{{ article.title }}</a></h5>
-                    <a class="btn btn-primary" href="{% url 'news:article_remove' pk=article.pk %}"><span class="fa fa-remove"></span></a>
-
-                    </div>
+                        <div class="card-body">
+                            <img class="card-img-top" src="{{ article.image.url }}">
+                            <h5 class="card-title"><a href="{{ article.url }}">{{ article.title }}</a></h5>
+                            <a class="btn btn-primary" href="{% url 'news:article_remove' pk=article.pk %}"><span class="fa fa-remove"></span></a>
+                        </div>
                 </div>
                 {% endfor %}
-                <div class="row">
     
 {% endblock %}
-
-
-
 
 
