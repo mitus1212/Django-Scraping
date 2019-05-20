@@ -37,10 +37,9 @@
                     
                         <h5 class="card-title">{{ weath.degree }}&#176;C</h5>
                         <a class="btn btn-primary" href="{% url 'news:weather_remove' pk=weath.pk %}"><span class="fa fa-remove"></span></a>
-
                     </div>
                 {% endfor %}
-                {% endif %}
+            {% endif %}
 
                 </div>
     <div class="container">
@@ -55,7 +54,7 @@
                             <a class="btn btn-primary" href="{% url 'news:article_remove' pk=article.pk %}"><span class="fa fa-remove"></span></a>
                         </div>
                 </div>
-                {% endfor %}
+            {% endfor %}
     
 {% endblock %}
 
