@@ -2,8 +2,6 @@ from django.test import TestCase
 
 from .models import Weather,Headline
 
-# Create your tests here.
-
 class WeatherModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
