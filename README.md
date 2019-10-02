@@ -10,3 +10,4 @@ The project is in progress, I'm going to add some financial data with generated 
 * Bootstrap - version 4.3.1
 * Plotly - version 4.1.1
 * Ubuntu - version 18.04
+* Apache - version 2.4
