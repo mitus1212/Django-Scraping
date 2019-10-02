@@ -22,3 +22,4 @@ class Weather(models.Model):
     weather = models.TextField()
     degree = models.CharField(max_length=200)
     pressure = models.IntegerField()
+    city = models.TextField(default="warsaw", editable=False)

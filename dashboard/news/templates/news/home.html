@@ -32,14 +32,20 @@
                 {% for weath in weather_in %}
                 <div class="card text-center" style="width: 100%;">
                     <div class="card-body">
-                        <h5 class="card-title"><a href="">Weather: {{ weath.weather }}</a></h5>
-                        <h5 class="card-title">HPa: {{ weath.pressure }}</h5>
-                    
+                        {% if weath.city == "" %}
+                        <h5 class="card-title">City: warsaw</h5>
+                        {% else %}
+                        <h5 class="card-title">City: {{ weath.city }}</h5>
+                        {% endif %}
+                        <h5 class="card-title">Weather: {{ weath.weather }}</h5>
+                        <h5 class="card-<h5 class="card-title">HPa: {{ weath.pressure }}</h5>
+
                         <h5 class="card-title">{{ weath.degree }}&#176;C</h5>
                         <a class="btn btn-primary" href="{% url 'news:weather_remove' pk=weath.pk %}"><span class="fa fa-remove"></span></a>
+
                     </div>
                 {% endfor %}
-            {% endif %}
+                {% endif %}
 
                 </div>
     <div class="container">
@@ -54,7 +60,7 @@
                             <a class="btn btn-primary" href="{% url 'news:article_remove' pk=article.pk %}"><span class="fa fa-remove"></span></a>
                         </div>
                 </div>
-            {% endfor %}
+                {% endfor %}
     
 {% endblock %}
 
