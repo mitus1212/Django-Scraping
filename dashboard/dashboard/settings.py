@@ -1,4 +1,3 @@
-  GNU nano 2.9.8                                                                                       settings.py                                                                                                 
 import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
