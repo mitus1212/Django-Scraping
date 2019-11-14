@@ -1,0 +1,105 @@
+{% extends 'news/base.html' %}
+{% block content %}
+
+<div class="row">
+<div class="span4 text-left"><a class="btn btn-primary" href="{% url 'add_book' %}">Add Book</a></div>
+<div class="span4 text-right"><a class="btn btn-primary" href="{% url 'rest_books' %}">REST API</a></div>
+</div>
+
+
+<form method="POST" action="{% url 'delete_books' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-info">Delete books</button>
+</form>
+<p></p>
+
+<form method="POST" action="{% url 'books' %}">
+    {% csrf_token %}
+    <input type="text" name="title" id="title"><br> 
+    <button type="submit" class="btn btn-info">Search by title</button>
+</form>
+
+<form method="POST" action="{% url 'books' %}">
+    {% csrf_token %}
+    <input type="text" name="authors" id="authors"><br> 
+    <p></p>
+    <button type="submit" class="btn btn-info">Search by authors</button>
+</form>
+
+<form method="POST" action="{% url 'books' %}">
+    {% csrf_token %}
+    <input type="text" name="language" id="language"><br> 
+    <p></p>
+    <button type="submit" class="btn btn-info">Search by language</button>
+</form>
+  
+<form method="POST" action="{% url 'books' %}">
+    {% csrf_token %} 
+    <button type="submit" class="btn btn-info" name="sort" value="sort">Sort</button>
+</form>  
+
+  <form method="POST" action="{% url 'books' %}">
+    {% csrf_token %}
+    <input type="text" name="date" id="date"><br> 
+    <p></p>
+    <button type="submit" class="btn btn-info">Search by date</button>
+</form>     
+
+<form method="POST" action="{% url 'books' %}">
+    {% csrf_token %}
+    <input type="text" name="import_books" id="import_books"><br> 
+    <p></p>
+    <button type="submit" class="btn btn-info">Import</button>
+</form> 
+<p></p>
+    
+{% for book in new_books %}
+
+    <tr>
+    <p>
+      <th scope="row"></th>
+      <td>{{ book.title }}</td>
+      <td>{{ book.authors }}</td>
+      <td>{{ book.language }} </td>
+      <td>{{ book.date }}, </td>
+      <td>{{ book.pages }}   </td>
+      <td>{{ book.link }} , </td>
+      <td>{{ book.industry_type_1 }} : {{ book.industry_id_1 }}, {{ book.industry_type_2 }} : {{ book.industry_id_2 }}
+</td>
+</p>,
+
+    </tr>
+{% endfor %}
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Authors</th>
+      <th scope="col">Language</th>
+      <th scope="col">Date</th>
+      <th scope="col">Pages</th>
+      <th scope="col">Link</th>
+      <th scope="col">Industry</th>
+    </tr>
+  </thead>
+  <tbody>
+
+{% for book in books %}
+
+    <tr>
+      <td>{{ book.title }}</td>
+            <td>{{ book.authors }}</td>
+            <td>{{ book.language }} </td>
+            <td>{{ book.date }}, </td>
+            <td>{{ book.pages }}   </td>
+            <td>{{ book.link }} , </td>
+            <td>{{ book.industry_type_1 }} : {{ book.industry_id_1 }}, {{ book.industry_type_2 }} : {{ book.industry_id_2 }}
+      </td>
+    </tr>
+{% endfor %}
+
+  </tbody>
+</table>
+{% endblock %}
+

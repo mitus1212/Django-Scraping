@@ -1,0 +1,39 @@
+{% extends 'news/base.html' %}
+{% load static %}
+{% block content %}
+<a class="btn btn-primary" href="{% url 'books' %}">Books List</a>
+
+<div class="form-group row">
+
+{% if error == 1 %}
+    <p>Wrong data, try again.</p>
+{% endif %}
+    <form method="POST" action="{% url 'add_book' %}">
+        {% csrf_token %}
+<div class="col-xs-2">
+Title
+<input class="form-control" type="text" name="title"/>
+Authors
+<input class="form-control" type="text" name="authors"/>
+Pages
+<input class="form-control" type="text" name="pages"/>
+Date(YYYY-MM-DD,YYYY-MM-DD)
+<input class="form-control" type="text" name="date"/>
+Industry id 1
+<input class="form-control" type="text" name="industry_id_1"/>
+Industry id 2
+<input class="form-control" type="text" name="industry_id_2"/>
+Industry type 1
+<input class="form-control" type="text" name="industry_type_1"/>
+Industry type 2
+<input class="form-control" type="text" name="industry_type_2"/>
+Link
+<input class="form-control" type="text" name="link"/>
+Language
+<input class="form-control" type="text" name="language"/>
+<p></p>
+<button type="submit" class="btn btn-info">Add Book</button>
+
+</form>
+</div></div></div>
+{% endblock %}
