@@ -3,7 +3,7 @@ It's a website scraping news with images and links from the other site.
 It also scrapes weather by deafult in warsaw.
 Small notes app in which you can upload photo and add link.
 Book App is database manager which has functions:
-- automatically download "Hobbit" books
+- automatically download "Hobbit" books as a default
 - delete all books
 - sort books by title
 - search by authors, title, date, language
