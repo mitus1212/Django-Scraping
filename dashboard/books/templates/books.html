@@ -1,58 +1,62 @@
 {% extends 'news/base.html' %}
 {% block content %}
 
-<div class="row">
-<div class="span4 text-left"><a class="btn btn-primary" href="{% url 'add_book' %}">Add Book</a></div>
-<div class="span4 text-right"><a class="btn btn-primary" href="{% url 'rest_books' %}">REST API</a></div>
-</div>
 
+<div class="row">
+<div class="span4 text-left mr-3 ml-4"><a class="btn btn-primary" href="{% url 'add_book' %}">Add Book</a></div>
+<div class="span4 text-right"><a class="btn btn-primary ml-2" href="{% url 'rest_books' %}">REST API</a></div>
+</div>
+<p></p>
+<div class="input-group">
 
 <form method="POST" action="{% url 'delete_books' %}">
     {% csrf_token %}
-    <button type="submit" class="btn btn-info">Delete books</button>
+    <button type="submit" class="btn btn-info mr-3">Delete books</button>
 </form>
-<p></p>
+ 
+  <form method="POST" action="{% url 'books' %}">
+      {% csrf_token %} 
+      <button type="submit" class="btn btn-info ml-2" name="sort" value="sort">Sort</button>
+  </form></div>
+<div class="input-group mt-4">
+
 
 <form method="POST" action="{% url 'books' %}">
     {% csrf_token %}
-    <input type="text" name="title" id="title"><br> 
-    <button type="submit" class="btn btn-info">Search by title</button>
-</form>
+    <input type="text" name="title" id="title">
+    <button type="submit" class="btn btn-info ml-3 px-5">Search by title</button>
+</form></div>
+<div class="input-group mt-4">
 
 <form method="POST" action="{% url 'books' %}">
     {% csrf_token %}
-    <input type="text" name="authors" id="authors"><br> 
-    <p></p>
-    <button type="submit" class="btn btn-info">Search by authors</button>
-</form>
+    <input type="text" name="authors" id="authors"> 
+    <button type="submit" class="btn btn-info ml-3 px-5">Search by author</button>
+</form></div>
+<div class="input-group mt-4">
 
 <form method="POST" action="{% url 'books' %}">
     {% csrf_token %}
-    <input type="text" name="language" id="language"><br> 
-    <p></p>
-    <button type="submit" class="btn btn-info">Search by language</button>
-</form>
-  
-<form method="POST" action="{% url 'books' %}">
-    {% csrf_token %} 
-    <button type="submit" class="btn btn-info" name="sort" value="sort">Sort</button>
-</form>  
+    <input type="text" name="language" id="language"> 
+    <button type="submit" class="btn btn-info ml-3 px-5">Search by language</button>
+</form></div>
+
+<div class="input-group mt-4">
 
   <form method="POST" action="{% url 'books' %}">
     {% csrf_token %}
-    <input type="text" name="date" id="date"><br> 
-    <p></p>
-    <button type="submit" class="btn btn-info">Search by date</button>
-</form>     
+    <p>Format 1996-11-12,1996-11-12 or 1993,2004</p>
+    <input type="text" name="date" id="date"> 
+    <button type="submit" class="btn btn-info ml-3 px-5">Search by date</button>
+</form> </div>   
+<div class="input-group mt-4  mb-4">
 
 <form method="POST" action="{% url 'books' %}">
     {% csrf_token %}
-    <input type="text" name="import_books" id="import_books"><br> 
-    <p></p>
-    <button type="submit" class="btn btn-info">Import</button>
-</form> 
-<p></p>
-    
+    <input type="text" name="import_books" id="import_books" placeholder="title keyword"> 
+    <button type="submit" class="btn btn-info ml-3 px-5">Import</button>
+</form></div>
+
 {% for book in new_books %}
 
     <tr>
@@ -63,8 +67,7 @@
       <td>{{ book.language }} </td>
       <td>{{ book.date }}, </td>
       <td>{{ book.pages }}   </td>
-      <td>{{ book.link }} , </td>
-      <td>{{ book.industry_type_1 }} : {{ book.industry_id_1 }}, {{ book.industry_type_2 }} : {{ book.industry_id_2 }}
+      <td><a href="{{ book.link }}">{{ book.link }}</a></td>
 </td>
 </p>,
 
@@ -80,7 +83,6 @@
       <th scope="col">Date</th>
       <th scope="col">Pages</th>
       <th scope="col">Link</th>
-      <th scope="col">Industry</th>
     </tr>
   </thead>
   <tbody>
@@ -93,9 +95,7 @@
             <td>{{ book.language }} </td>
             <td>{{ book.date }}, </td>
             <td>{{ book.pages }}   </td>
-            <td>{{ book.link }} , </td>
-            <td>{{ book.industry_type_1 }} : {{ book.industry_id_1 }}, {{ book.industry_type_2 }} : {{ book.industry_id_2 }}
-      </td>
+      <td><a href="{{ book.link }}">{{ book.link }}</a></td>
     </tr>
 {% endfor %}
 

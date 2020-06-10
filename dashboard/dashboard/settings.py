@@ -1,24 +1,22 @@
 import json
+import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
-STATIC_ROOT = os.path.join(BASE_DIR,'static/')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
-with open("/***/***/config.json") as config_file:
-    config = json.load(config_file)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config["SECRET_KEY"]
+SECRET_KEY = ["xxxxx"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.mateusz-radej.pl','***']
+ALLOWED_HOSTS = ['***']
 
 # Application definition
 
@@ -35,6 +33,7 @@ INSTALLED_APPS = [
     'charts',
     'rest_framework',
     'books',
+    'crispy_forms',
 
 ]
 
@@ -121,9 +120,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 VENV_PATH = os.path.dirname(BASE_DIR)
-MEDIA_URL = '/media_root/'
-MEDIA_ROOT = 'C:/Users/mat/Desktop/jspython/just django/dashboard/media_root/'
+
+MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+STATIC_ROOT  = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'static_in_env'),
+        os.path.join(BASE_DIR, 'staticenv'),
 ]

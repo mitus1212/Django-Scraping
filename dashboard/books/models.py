@@ -5,7 +5,6 @@ class Book(models.Model):
     title = models.CharField(max_length=120)
     authors = models.CharField(max_length=120)
     date = models.DateField(blank=True)
-    industryIdentifiers = models.CharField(max_length=240)
 
     pages = models.IntegerField()
     link = models.CharField(max_length=1024)

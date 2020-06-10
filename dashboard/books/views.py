@@ -10,28 +10,26 @@ from rest_framework import generics
 from rest_framework import filters
 from rest_framework.views import APIView
 from rest_framework import status
+from django.http import HttpResponse
+from django.template import loader, Context
 
 class BookView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializers
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'language', 'authors', 'date']
-
+        
         
 def books_list(request):
-    url = "https://www.googleapis.com/books/v1/volumes?q=Hobbit"
     new_books = []
-
     books = Book.objects.all()
-    auths = Book.objects.order_by('title')[:30]
 
-    json_data = requests.get(url).json()
-    y = len(books)
-
-    if y < 10:
-        y = 10
+    sort_by = request.POST.get("sort")  
+    if sort_by:
+        books = Book.objects.order_by('title')[:3000]
     else:
         pass
+
   
     def for_loop(url="https://www.googleapis.com/books/v1/volumes?q=Hobbit"):
 
@@ -43,19 +41,17 @@ def books_list(request):
             url = base_url + import_books
         except:
             pass
-
+        
         new_books = []
-
-        books = Book.objects.all()
         json_data = requests.get(url).json()
-        y = len(books)
+        books_amount = len(books)
 
-        if y < 10:
-            y = 10
+        if books_amount < 10:
+            books_amount = 10
         else:
             pass
 
-        for book_num in range(0,y):
+        for book_num in range(0, books_amount):
             try:
                 title = json_data['items'][book_num]['volumeInfo']['title']
                 existing_books = []
@@ -72,6 +68,7 @@ def books_list(request):
                     date = json_data['items'][book_num]['volumeInfo']['publishedDate']
 
                     for aut in authors_raw:
+                        authors = ""
                         authors += aut
                         authors += " "
                     if len(date) == 4:
@@ -81,31 +78,23 @@ def books_list(request):
 
                     else:
                         date = json_data['items'][book_num]['volumeInfo']['publishedDate']
-
-
-
                     try:
                         pages = json_data['items'][book_num]['volumeInfo']['pageCount']
                     except:
                         pages = 0
 
                     language = json_data['items'][book_num]['volumeInfo']['language']
-                    link = json_data['items'][book_num]['volumeInfo']['imageLinks']['thumbnail']
-                    industry_type_1 = json_data['items'][book_num]['volumeInfo']['industryIdentifiers']
-                    industry_id_1 = json_data['items'][book_num]['volumeInfo']['industryIdentifiers'][0]['identifier']
-                    industry_type_2 = json_data['items'][book_num]['volumeInfo']['industryIdentifiers'][1]['type']
-                    industry_id_2 = json_data['items'][book_num]['volumeInfo']['industryIdentifiers'][1]['identifier']
+                    try:
+                        link = json_data['items'][book_num]['volumeInfo']['imageLinks']['thumbnail']
+                    except:
+                        link = ""
 
                     new_book = Book()
                     new_book.title = title 
                     new_book.authors = authors
                     new_book.link = link
                     new_book.language = language
-                    new_book.industry_type_1 = industry_type_1
-                    new_book.industry_type_2 = industry_type_2
 
-                    new_book.industry_id_1 = industry_id_1
-                    new_book.industry_id_2 = industry_id_2
 
                     new_book.pages = pages
                     new_book.date = date
@@ -114,67 +103,67 @@ def books_list(request):
                 book_num -= 1
     for_loop()
 
-    if request.method == 'POST':
-        books = Book.objects.order_by('title')[:3000]
+    search_title = request.POST.get("title")  
+    search_authors = request.POST.get("authors")   
+    str(search_title)
+    str(search_authors)
+ 
+    try:
+        if search_title != "":
+            for book in books:
+                if search_title.lower() in book.title.lower():
+                    new_books.append(book)
+                else:
+                    pass
+        elif search_authors != "":
+            for book in books:
+                if search_authors in book.authors:
+                    new_books.append(book)
+                else:
+                    pass
+    except:
+        pass
+    search_authors = request.POST.get("authors")   
+    str(search_authors)
 
-        sort_by = request.POST.get("sort")  
-        auths = Book.objects.order_by('title')[:3000]
-        if sort_by:
-            for_loop()
+    try:
+        if search_authors != "":
+            for book in books:
+                if search_authors.lower() in book.authors.lower():
+                    new_books.append(book)
+                else:
+                    pass
+    except:
+        pass
+    search_language = request.POST.get("language")   
+    str(search_language)
+
+    try:
+        if search_language != "":
+            for book in books:
+                if search_language.lower() in book.language:
+                    new_books.append(book)
+                else:
+                    pass
+    except:
+        pass
+
+    try:
+        search_date = request.POST.get("date")
+        str(search_date)
+
+        searched_split_date = search_date.split(",")
+        searched_split_date_1 = searched_split_date[0].split("-")
+        searched_split_date_2 = searched_split_date[1].split("-")
+        
+        if len(searched_split_date_1) <= 4 and len(searched_split_date_2) <= 4:
+            year_1 = searched_split_date_1[0]
+            month_1 = "01"
+            day_1 = "01"
+            year_2 = searched_split_date_2[0]
+            month_2 = "01"
+            day_2 = "01"    
         else:
-            pass
-
-    if request.method == 'POST':
-        search_title = request.POST.get("title")  
-        search_authors = request.POST.get("authors")   
-        str(search_title).lower()
-        str(search_authors).lower()
-        try:
-            if search_title != "":
-                for book in books:
-                    if search_title in book.title:
-                        new_books.append(book)
-                    else:
-                        pass
-            elif search_authors != "":
-                for book in books:
-                    if search_authors in book.authors:
-                        new_books.append(book)
-                    else:
-                        pass
-        except:
-            pass
-        search_authors = request.POST.get("authors")   
-        str(search_authors).lower()
-        try:
-            if search_authors != "":
-                for book in books:
-                    if search_authors in book.authors:
-                        new_books.append(book)
-                    else:
-                        pass
-        except:
-            pass
-        search_language = request.POST.get("language")   
-        str(search_language)
-        try:
-            if search_language != "":
-                for book in books:
-                    if search_language in book.language:
-                        new_books.append(book)
-                    else:
-                        pass
-        except:
-            pass
-    if request.method == 'POST':
-        try:
-            search_date = request.POST.get("date")   
-            str(search_date)
-
-            searched_split_date = search_date.split(",")
-            searched_split_date_1 = searched_split_date[0].split("-")
-            searched_split_date_2 = searched_split_date[1].split("-")
-
             year_1 = searched_split_date_1[0]
             month_1 = searched_split_date_1[1]
             day_1 = searched_split_date_1[2]
@@ -182,34 +171,33 @@ def books_list(request):
             month_2 = searched_split_date_2[1]
             day_2 = searched_split_date_2[2]
 
-            for book in books:
-                string_date = str(book.date)
-                book_date = string_date.split("-")
-                book_year = int(book_date[0])
-                book_month = book_date[1]
-                book_day = book_date[2]
+        for book in books:
+            string_date = str(book.date)
+            book_date = string_date.split("-")
+            book_year = int(book_date[0])
+            book_month = book_date[1]
+            book_day = book_date[2]
 
-                date_1 = int(str(year_1) + str(month_1) + str(day_1))
-                date_2 = int(str(year_2) + str(month_2) + str(day_2))
+            date_1 = int(str(year_1) + str(month_1) + str(day_1))
+            date_2 = int(str(year_2) + str(month_2) + str(day_2))
 
-                book_date_int = int(str(book_year) + str(book_month) + str(book_day))
+            book_date_int = int(str(book_year) + str(book_month) + str(book_day))
 
-                if date_1 <= book_date_int <= date_2:
-                    new_books.append(book)
-                else:
-                    pass
-        except:
-            pass
+            if date_1 <= book_date_int <= date_2:
+                new_books.append(book)
+            else:
+                pass
+    except:
+        pass
 
-    if request.method == 'POST':
-        import_books = request.POST.get("import_books")   
-        str(import_books)
-        try:
-            base_url = "https://www.googleapis.com/books/v1/volumes?q="
-            new_url = base_url + import_books
-            for_loop(new_url)
-        except:
-            pass
+    import_books = request.POST.get("import_books")   
+    str(import_books)
+    try:
+        base_url = "https://www.googleapis.com/books/v1/volumes?q="
+        new_url = base_url + import_books
+        for_loop(new_url)
+    except:
+        pass
     context = {
         'books': books,
         'new_books': new_books,    
@@ -229,10 +217,6 @@ def add_book(request):
             new_book.link = request.POST.get('link')
             new_book.date = request.POST.get('date')
             new_book.language = request.POST.get('language')
-            new_book.industry_type_1 = request.POST.get('industry_type_1')
-            new_book.industry_type_1 = request.POST.get('industry_type_2')
-            new_book.industry_id_1 = request.POST.get('industry_id_1')
-            new_book.industry_id_1 = request.POST.get('industry_id_1')
             new_book.save()
         except:
             pass
@@ -241,6 +225,7 @@ def add_book(request):
         'new_boook': new_book,
     }
     return render(request, "add_book.html", context)
+
 
 def delete_books(request):
     books = Book.objects.all()

@@ -11,21 +11,19 @@
 
         <form method="POST "action="{% url 'scrape' %}">
             {% csrf_token %}
-            <button type="submit" class="btn btn-info">Get my morning news</button>
+            <button type="submit" class="btn btn-info mb-4 mt-4 btn--mod">Get my morning news</button>
         </form>
         {% endif %}
-       
+       <h4>BTC price is {{ price }}$</h2>
     </div> 
         <div class="jumbotron">
             <h3>Weather</h3>
 
             <form method="POST" action="{% url 'weather' %}">
                 {% csrf_token %}
-                <input type="text" name="city" id="city"><br> 
-                <p></p>
-                <button type="submit" class="btn btn-info">Get my weather</button>
+                <input type="text" placeholder="city" name="city" id="city"><br> 
+                <button type="submit" class="btn btn-info mb-4 mt-4 btn--mod">Get my weather</button>
             </form>
-
             {% if hide_weather == True %}
 
             {% else %}
@@ -41,7 +39,7 @@
                         <h5 class="card-<h5 class="card-title">HPa: {{ weath.pressure }}</h5>
 
                         <h5 class="card-title">{{ weath.degree }}&#176;C</h5>
-                        <a class="btn btn-primary" href="{% url 'news:weather_remove' pk=weath.pk %}"><span class="fa fa-remove"></span></a>
+                        <a class="btn btn-primary btn--mod" href="{% url 'news:weather_remove' pk=weath.pk %}"><span class="fa fa-remove"></span></a>
 
                     </div>
                 {% endfor %}
@@ -57,7 +55,7 @@
                         <div class="card-body">
                             <img class="card-img-top" src="{{ article.image.url }}">
                             <h5 class="card-title"><a href="{{ article.url }}">{{ article.title }}</a></h5>
-                            <a class="btn btn-primary" href="{% url 'news:article_remove' pk=article.pk %}"><span class="fa fa-remove"></span></a>
+                            <a class="btn btn-primary btn--mod" href="{% url 'news:article_remove' pk=article.pk %}"><span class="fa fa-remove"></span></a>
                         </div>
                 </div>
                 {% endfor %}

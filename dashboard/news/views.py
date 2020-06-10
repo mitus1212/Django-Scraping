@@ -19,25 +19,18 @@ requests.packages.urllib3.disable_warnings()
 
 def news_list(request):
    
-    user_prof = UserProfile.objects.filter(user=request.user).first()
-    now = datetime.now(timezone.utc)
-    time_difference = now - user_prof.last_scrape
-    time_difference_in_hours = time_difference / timedelta(minutes=60)
-    next_scrape = 24 - time_difference_in_hours
-
-    if time_difference_in_hours <= 24:
-        hide_me = True
-    else:
-        hide_me = False
-
     weathers_info = Weather.objects.all()
     headlines = Headline.objects.all()
-  
+
+    url = "https://blockchain.info/ticker"
+    
+    json_data = requests.get(url).json()
+    price = json_data['USD']['last']    
+
     context = {
         'object_list': headlines,
-        'hide_me': hide_me,
-        'next_scrape': math.ceil(next_scrape),
         'weather_in': weathers_info,
+        'price': price,
     }  
 
     
@@ -56,17 +49,15 @@ def delete_article(request, id):
 
 def scrape(request):
 
-    filelist = glob.glob(os.path.join("/home/matms/django_project/media_root", "*.jpg"))
-    for f in filelist:
-        os.remove(f)
-    
-    old_articles = Weather.objects.all()
+    filelist = glob.glob(os.path.join("path", "*.jpg"))
+    try:
+        for f in filelist:
+            os.remove(f)
+    except Exception:
+        pass
+    old_articles = Headline.objects.all()
     old_articles.delete()
-    user_prof = UserProfile.objects.filter(user=request.user).first()
  
-    if user_prof is not None:
-        user_prof.last_scrape = datetime.now(timezone.utc)
-        user_prof.save()
 
     session = requests.Session()
     session.headers = {
@@ -77,27 +68,20 @@ def scrape(request):
 
     soup = BeautifulSoup(content, "html.parser")
 
-    #posts = soup.find_all('a',{'class':'itemBox itemBox_3_1 s1_155'})
-
     posts = soup.find_all('div', {'class': 'sectionLine'})
         
     for post in posts:
- 
-        title = post.find('span', {'class': 'title'}).get_text()
-        link = post.find("a")['href']
-        image_source = post.find('img')['src']
-        image_source_solved = "http:{}".format(image_source)
+        try:
+            title = post.find('span', {'class': 'title'}).get_text()
+            link = post.find("a")['href']
+            image_source = post.find('img')['src']
+            image_source_solved = "https:{}".format(image_source)
 
-            # stackoverflow solution
+                # stackoverflow solution
 
-        media_root = '/home/matms/django_project/media_root'
+            media = 'path'
 
-        if not image_source_solved.startswith(("data:image", "javascript")):
-            exists = 1   
-            
-            if exists == 2:
-                pass
-            else:
+            if not image_source_solved.startswith(("data:image", "javascript")):
                 local_filename = image_source_solved.split('/')[-1].split("?")[0]+".jpg"
                 r = session.get(image_source_solved, stream=True, verify=False)
                 with open(local_filename, 'wb') as f:
@@ -105,7 +89,7 @@ def scrape(request):
                         f.write(chunk)
 
                 current_image_absolute_path = os.path.abspath(local_filename)
-
+                shutil.move(current_image_absolute_path, media)
                 # end of stackoverflow solution
 
             new_headline = Headline()
@@ -116,9 +100,10 @@ def scrape(request):
             sleep(1)
             
             if Headline.objects.all().count() == 5:
-         
+        
                 return redirect('/home/')
-
+        except:
+            pass
     return redirect('/home/')
 
 
@@ -127,26 +112,31 @@ def scrape_weather(request):
 
         old_weather = Weather.objects.all()
         old_weather.delete()
+
+
         api_adress = "http://api.openweathermap.org/data/2.5/weather?q="
-        api_key = "***"
+        api_key = "key"
         city = request.POST.get("city")
+            
         url = api_adress + city + api_key
        
         if url == (api_adress + api_key):
             url = api_adress + "warsaw" + api_key
        
         json_data = requests.get(url).json()
-        new_weather = json_data['weather'][0]['main']
-        degree_kelvin = int(json_data['main']['temp'])
-        degree = degree_kelvin-273
-        pressure = json_data['main']['pressure']      
-      
-        new_weather = Weather()
-        new_weather.city = city
-        new_weather.degree = degree
-        new_weather.pressure = pressure
-        new_weather.weather = new_weather
-        new_weather.save()
+        try:
+            weather = json_data['weather'][0]['main']
+            degree_kelvin = int(json_data['main']['temp'])
+            degree = degree_kelvin-273
+            pressure = json_data['main']['pressure']   
+            new_weather = Weather()
+            new_weather.city = city
+            new_weather.degree = degree
+            new_weather.pressure = pressure
+            new_weather.weather = weather
+            new_weather.save()   
+        except:
+            pass
         
     return redirect('/home/')
 

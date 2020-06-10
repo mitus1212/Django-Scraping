@@ -1,4 +1,3 @@
-  GNU nano 2.9.8                                                                                         urls.py                                                                                                   
 """dashboard URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -22,6 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from charts.views import chart_view
 from books.views import books_list, add_book, delete_books
+
 urlpatterns = [
     path('chart/', chart_view, name='chart'),
     path('notes/', include('notepad.urls', namespace='notes')),
@@ -32,18 +32,13 @@ urlpatterns = [
     path('', include('news.urls')),
     path('', include('notepad.urls')),
     path('', include('books.urls')),
-
-    path('delete_books/', delete_books, name="delete_books")
-    path('add_book/', add_book, name="add_book")
-    path('books/', books_list, name="books")
+    path('delete_books/', delete_books, name="delete_books"),
+    path('add_book/', add_book, name="add_book"),
+    path('books/', books_list, name="books"),
     path('api/chart/data/',ChartData.as_view(), name='api_chart-data'),
-
 
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-
