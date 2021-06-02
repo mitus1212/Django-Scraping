@@ -28,5 +28,5 @@ retrying==1.3.3
 six==1.12.0
 soupsieve==1.9
 sqlparse==0.3.1
-urllib3==1.24.1
+urllib3==1.26.5
 wincertstore==0.2
